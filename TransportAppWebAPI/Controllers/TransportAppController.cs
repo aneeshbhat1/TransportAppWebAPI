@@ -17,7 +17,7 @@ namespace TransportAppWebAPI.Controllers
         // GET: api/TransportApp
         [HttpGet]
         [ActionName("GetUserDetails")]
-        public string GetUserDetails(string userName,string pwd)
+        public IHttpActionResult GetUserDetails(string userName,string pwd)
         {
             try
             {
@@ -45,6 +45,7 @@ namespace TransportAppWebAPI.Controllers
                             LicenseNumber = (string)reader["LicenseNumber"],
                             VehicleType = (string)reader["VehicleType"],
                             ReferralCode = (string)reader["ReferralCode"],
+                            MobileNumber = (string)reader["MobileNumber"],
                             ReferredBy = (string)reader["ReferredBy"],
                             CashbackEarned = (int)reader["CashbackEarned"]
                         });
@@ -52,17 +53,18 @@ namespace TransportAppWebAPI.Controllers
                     conn.Close();
                     if (user.Count > 0)
                     {
-                        return JsonConvert.SerializeObject(user[0]);
+                        return this.JsonString(JsonConvert.SerializeObject(user[0]), HttpStatusCode.OK);
+                        
                     }
                     else
                     {
-                        return null;
+                        return this.JsonString("",HttpStatusCode.NotFound);
                     }
                 }
             }
             catch (Exception ex)
             {
-                return "Failure";
+                return this.JsonString(ex.Message, HttpStatusCode.BadRequest); ;
             }
         }
 
