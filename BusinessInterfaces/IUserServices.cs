@@ -11,7 +11,7 @@ namespace BusinessInterfaces
     public interface IUserServices
     {
         int AuthenticateUser(string userName, string password);
-        UserModel GetUserDetails(string userName);
+        UserModel GetUserDetails(string userName, string pwd);
         string RegisterUserDetails(UserModel user);
     }
 }

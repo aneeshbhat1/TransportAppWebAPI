@@ -10,6 +10,22 @@ namespace DALResolver
 {
     public class DALFactory
     {
+        private static DALFactory dalFactory;
+        public static DALFactory Instance
+        {
+            get
+            {
+                if(dalFactory == null)
+                {
+                    dalFactory = new DALFactory();
+                }
+                return dalFactory;
+            }
+        }
+        private DALFactory()
+        {
+
+        }
         private IUserServices userService;
         private ILocationServices locationService;
         private ITokenService tokenService;

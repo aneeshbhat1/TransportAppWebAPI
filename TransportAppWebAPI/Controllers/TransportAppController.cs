@@ -8,21 +8,20 @@ using TransportAppWebAPI.Filters;
 using Models;
 using Newtonsoft.Json;
 using System.Net;
+using TransportAppWebAPI.ActionFilters;
 
 namespace TransportAppWebAPI.Controllers
 {
-    [ApiAuthenticationFilter]
+    [AuthorizationRequired]
     public class TransportAppController : ApiController
     {
-        private DALFactory factory = new DALFactory();
-        // GET: api/TransportApp
-        [HttpGet]
-        [ActionName("GetUserDetails")]
-        public IHttpActionResult GetUserDetails(string userName)
+       [HttpGet]
+       [ActionName("GetUserDetails")]
+        public IHttpActionResult GetUserDetails(string userName,string password)
         {
             try
             {
-                UserModel user = factory.UserService.GetUserDetails(userName);
+                UserModel user = DALFactory.Instance.UserService.GetUserDetails(userName, password);
                 if (user != null)
                 {
                     return this.JsonString(JsonConvert.SerializeObject(user), HttpStatusCode.OK);
@@ -47,7 +46,7 @@ namespace TransportAppWebAPI.Controllers
             UserModel user = JsonConvert.DeserializeObject<UserModel>(jsonString.ToString());
             try
             {
-                return factory.UserService.RegisterUserDetails(user) ;
+                return DALFactory.Instance.UserService.RegisterUserDetails(user) ;
             }
             catch (Exception ex)
             {

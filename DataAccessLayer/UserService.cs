@@ -3,6 +3,7 @@ using Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -13,27 +14,35 @@ using System.Web.Http;
 
 namespace DataAccessLayer
 {
-    public class UserService:IUserServices
+    public class UserService : IUserServices
     {
         public int AuthenticateUser(string userName, string password)
         {
-            throw new NotImplementedException();
+            UserModel userModel = this.GetUserDetails(userName, password);
+            if (userModel != null)
+            {
+                return userModel.UserId;
+            }
+            else
+            {
+                return -1;
+            }
         }
 
-        public UserModel GetUserDetails(string userName)
+        public UserModel GetUserDetails(string userName, string pwd)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection())
                 {
-                    conn.ConnectionString = @"Server=ANEESH\SQLEXPRESS;Database=AneeshDatabase;User ID=ANEESH\Archana;Trusted_Connection=true";
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandText = "GetUserDetails";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Connection = conn;
                     cmd.Parameters.Add(new SqlParameter("@UserName", userName));
-                    //cmd.Parameters.Add(new SqlParameter("@Password", pwd));
+                    cmd.Parameters.Add(new SqlParameter("@Password", pwd));
 
                     SqlDataReader reader = cmd.ExecuteReader();
                     List<UserModel> user = new List<UserModel>();
@@ -82,7 +91,7 @@ namespace DataAccessLayer
             {
                 using (SqlConnection conn = new SqlConnection())
                 {
-                    conn.ConnectionString = @"Server=ANEESH\SQLEXPRESS;Database=AneeshDatabase;User ID=ANEESH\Archana;Trusted_Connection=true";
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandText = "RegisterUserDetails";
