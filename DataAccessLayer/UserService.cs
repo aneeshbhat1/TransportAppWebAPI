@@ -18,18 +18,38 @@ namespace DataAccessLayer
     {
         public int AuthenticateUser(string userName, string password)
         {
-            UserModel userModel = this.GetUserDetails(userName, password);
-            if (userModel != null)
+            int user_id = -1;
+            try
             {
-                return userModel.UserId;
+                using (SqlConnection conn = new SqlConnection())
+                {
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandText = "AuthenticateUser";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Connection = conn;
+                    cmd.Parameters.Add(new SqlParameter("@UserName", userName));
+                    cmd.Parameters.Add(new SqlParameter("@Password", password));
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    List<UserModel> user = new List<UserModel>();
+                    // Data is accessible through the DataReader object here.
+                    if (reader.Read())
+                    {
+                        user_id = (int)reader["User_Id"];
+                    }
+                    conn.Close();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return -1;
             }
+
+            return user_id;
         }
 
-        public UserModel GetUserDetails(string userName, string pwd)
+        public UserModel GetUserDetails(string userName)
         {
             try
             {
@@ -42,7 +62,7 @@ namespace DataAccessLayer
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Connection = conn;
                     cmd.Parameters.Add(new SqlParameter("@UserName", userName));
-                    cmd.Parameters.Add(new SqlParameter("@Password", pwd));
+                    //cmd.Parameters.Add(new SqlParameter("@Password", pwd));
 
                     SqlDataReader reader = cmd.ExecuteReader();
                     List<UserModel> user = new List<UserModel>();
@@ -80,41 +100,57 @@ namespace DataAccessLayer
             }
         }
 
-        public string RegisterUserDetails(UserModel user)
+        public Status RegisterUserDetails(UserModel user)
         {
+            Status status = new Status();
             if (user == null)
             {
-                return "Failure";
+                status.StatusCode = -1;
+                status.StatusMessage = "Bad input";
+                return status;
             }
 
             try
             {
-                using (SqlConnection conn = new SqlConnection())
+                if (this.GetUserDetails(user.UserName) != null)
                 {
-                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandText = "RegisterUserDetails";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Connection = conn;
-                    cmd.Parameters.Add(new SqlParameter("@Name", user.Name));
-                    cmd.Parameters.Add(new SqlParameter("@UserName", user.UserName));
-                    //cmd.Parameters.Add(new SqlParameter("@Password", string.IsNullOrEmpty(user.Password) ? "" : user.Password));
-                    cmd.Parameters.Add(new SqlParameter("@MobileNumber", user.MobileNumber));
-                    cmd.Parameters.Add(new SqlParameter("@VehicleType", user.VehicleType));
-                    cmd.Parameters.Add(new SqlParameter("@LicenseNumber", string.IsNullOrEmpty(user.LicenseNumber) ? "" : user.LicenseNumber));
-                    cmd.Parameters.Add(new SqlParameter("@ReferredBy", user.ReferredBy));
-                    cmd.Parameters.Add(new SqlParameter("@ReferralCode", GenerateCode(6, new Random())));
-                    cmd.Parameters.Add(new SqlParameter("@CashbackEarned", user.CashbackEarned));
+                    status.StatusCode = 2;
+                    status.StatusMessage = "Already Registered";
+                    return status;
+                }
+                else
+                {
+                    using (SqlConnection conn = new SqlConnection())
+                    {
+                        conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.CommandText = "RegisterUserDetails";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Connection = conn;
+                        cmd.Parameters.Add(new SqlParameter("@Name", user.Name));
+                        cmd.Parameters.Add(new SqlParameter("@UserName", user.UserName));
+                        //cmd.Parameters.Add(new SqlParameter("@Password", string.IsNullOrEmpty(user.Password) ? "" : user.Password));
+                        cmd.Parameters.Add(new SqlParameter("@MobileNumber", user.MobileNumber));
+                        cmd.Parameters.Add(new SqlParameter("@VehicleType", user.VehicleType));
+                        cmd.Parameters.Add(new SqlParameter("@LicenseNumber", string.IsNullOrEmpty(user.LicenseNumber) ? "" : user.LicenseNumber));
+                        cmd.Parameters.Add(new SqlParameter("@ReferredBy", user.ReferredBy));
+                        cmd.Parameters.Add(new SqlParameter("@ReferralCode", GenerateCode(6, new Random())));
+                        cmd.Parameters.Add(new SqlParameter("@CashbackEarned", user.CashbackEarned));
 
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                    return "Success";
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                        status.StatusCode = 1;
+                        status.StatusMessage = "Successs";
+                        return status;
+                    }
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                status.StatusCode = 0;
+                status.StatusMessage = "Failure";
+                return status;
             }
         }
         /// <summary>

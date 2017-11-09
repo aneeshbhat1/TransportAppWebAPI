@@ -12,20 +12,20 @@ using TransportAppWebAPI.ActionFilters;
 
 namespace TransportAppWebAPI.Controllers
 {
-    [AuthorizationRequired]
+    
     public class TransportAppController : ApiController
     {
-       [HttpGet]
-       [ActionName("GetUserDetails")]
-        public IHttpActionResult GetUserDetails(string userName,string password)
+        [HttpGet]
+        [ActionName("GetUserDetails")]
+        [AuthorizationRequired]
+        public IHttpActionResult GetUserDetails(string userName)
         {
             try
             {
-                UserModel user = DALFactory.Instance.UserService.GetUserDetails(userName, password);
+                UserModel user = DALFactory.Instance.UserService.GetUserDetails(userName);
                 if (user != null)
                 {
                     return this.JsonString(JsonConvert.SerializeObject(user), HttpStatusCode.OK);
-
                 }
                 else
                 {
@@ -41,16 +41,32 @@ namespace TransportAppWebAPI.Controllers
         // POST: api/TransportApp
         [HttpPost]
         [ActionName("RegisterUserDetails")]
-        public string RegisterUserDetails([FromBody]dynamic jsonString)
+        public IHttpActionResult RegisterUserDetails([FromBody]dynamic jsonString)
         {
             UserModel user = JsonConvert.DeserializeObject<UserModel>(jsonString.ToString());
             try
             {
-                return DALFactory.Instance.UserService.RegisterUserDetails(user) ;
+                Status status = DALFactory.Instance.UserService.RegisterUserDetails(user) ;
+                if(status.StatusCode == 1)
+                {
+                    return this.JsonString(JsonConvert.SerializeObject(status), HttpStatusCode.OK);
+                }
+                else if(status.StatusCode == -1)
+                {
+                    return this.JsonString(JsonConvert.SerializeObject(status), HttpStatusCode.BadRequest);
+                }
+                else if (status.StatusCode == 2)
+                {
+                    return this.JsonString(JsonConvert.SerializeObject(status), HttpStatusCode.Conflict);
+                }
+                else
+                {
+                    return this.JsonString(JsonConvert.SerializeObject(status), HttpStatusCode.ExpectationFailed);
+                }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return this.JsonString(ex.Message, HttpStatusCode.BadRequest);
             }
         }
     }
