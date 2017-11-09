@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,8 @@ namespace BusinessInterfaces
 {
     public interface ILocationServices
     {
-        string GetAllUsersLocation();
-        void UpdateLocation(double latitude, double longitude, int user_id);
+        Location GetLocation(string userName);
+        List<Location> GetAllUsersLocation();
+        Status UpdateLocation(double latitude, double longitude, string userName);
     }
 }
