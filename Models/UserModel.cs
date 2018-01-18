@@ -17,5 +17,11 @@ namespace Models
         public int UserId { get;  set; }
         public string UserName { get;  set; }
         public string VehicleType { get;  set; }
+        public string Gender { get; set; }
+        public string PaytmRegisteredNumber { get; set; }
+        public string RegistrationType { get; set; }
+        public string VehicleCategory { get; set; }
+        public string RegistrationNo { get; set; }
+        public string Password { get; set; }
     }
 }

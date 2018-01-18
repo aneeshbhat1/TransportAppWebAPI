@@ -49,7 +49,7 @@ namespace DataAccessLayer
             return user_id;
         }
 
-        public UserModel GetUserDetails(string userName)
+        public UserModel GetUserDetails(string mobileNumber)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace DataAccessLayer
                     cmd.CommandText = "GetUserDetails";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Connection = conn;
-                    cmd.Parameters.Add(new SqlParameter("@UserName", userName));
+                    cmd.Parameters.Add(new SqlParameter("@MobileNumber", mobileNumber));
                     //cmd.Parameters.Add(new SqlParameter("@Password", pwd));
 
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -112,7 +112,7 @@ namespace DataAccessLayer
 
             try
             {
-                if (this.GetUserDetails(user.UserName) != null)
+                if (this.GetUserDetails(user.MobileNumber) != null)
                 {
                     status.StatusCode = 2;
                     status.StatusMessage = "Already Registered";
@@ -130,8 +130,13 @@ namespace DataAccessLayer
                         cmd.Connection = conn;
                         cmd.Parameters.Add(new SqlParameter("@Name", user.Name));
                         cmd.Parameters.Add(new SqlParameter("@UserName", user.UserName));
-                        //cmd.Parameters.Add(new SqlParameter("@Password", string.IsNullOrEmpty(user.Password) ? "" : user.Password));
+                        cmd.Parameters.Add(new SqlParameter("@Password", string.IsNullOrEmpty(user.Password) ? "" : user.Password));
                         cmd.Parameters.Add(new SqlParameter("@MobileNumber", user.MobileNumber));
+                        cmd.Parameters.Add(new SqlParameter("@Gender", user.Gender));
+                        cmd.Parameters.Add(new SqlParameter("@PaytmRegisteredNumber", user.PaytmRegisteredNumber));
+                        cmd.Parameters.Add(new SqlParameter("@RegistrationType", user.RegistrationType));
+                        cmd.Parameters.Add(new SqlParameter("@VehicleCategory", user.VehicleCategory));
+                        cmd.Parameters.Add(new SqlParameter("@RegistrationNo", user.RegistrationNo));
                         cmd.Parameters.Add(new SqlParameter("@VehicleType", user.VehicleType));
                         cmd.Parameters.Add(new SqlParameter("@LicenseNumber", string.IsNullOrEmpty(user.LicenseNumber) ? "" : user.LicenseNumber));
                         cmd.Parameters.Add(new SqlParameter("@ReferredBy", user.ReferredBy));

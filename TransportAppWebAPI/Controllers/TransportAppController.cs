@@ -18,11 +18,11 @@ namespace TransportAppWebAPI.Controllers
         [HttpGet]
         [ActionName("GetUserDetails")]
         [AuthorizationRequired]
-        public IHttpActionResult GetUserDetails(string userName)
+        public IHttpActionResult GetUserDetails(string mobileNumber)
         {
             try
             {
-                UserModel user = DALFactory.Instance.UserService.GetUserDetails(userName);
+                UserModel user = DALFactory.Instance.UserService.GetUserDetails(mobileNumber);
                 if (user != null)
                 {
                     return this.JsonString(JsonConvert.SerializeObject(user), HttpStatusCode.OK);
