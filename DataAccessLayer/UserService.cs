@@ -23,7 +23,7 @@ namespace DataAccessLayer
             {
                 using (SqlConnection conn = new SqlConnection())
                 {
-                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandText = "AuthenticateUser";
@@ -55,7 +55,7 @@ namespace DataAccessLayer
             {
                 using (SqlConnection conn = new SqlConnection())
                 {
-                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandText = "GetUserDetails";
@@ -122,7 +122,7 @@ namespace DataAccessLayer
                 {
                     using (SqlConnection conn = new SqlConnection())
                     {
-                        conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                        conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                         conn.Open();
                         SqlCommand cmd = new SqlCommand();
                         cmd.CommandText = "RegisterUserDetails";

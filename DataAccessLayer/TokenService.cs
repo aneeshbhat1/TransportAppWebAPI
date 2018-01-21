@@ -46,7 +46,7 @@ namespace DataAccessLayer
             {
                 using (SqlConnection conn = new SqlConnection())
                 {
-                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandText = "SaveTokenData";
@@ -87,7 +87,7 @@ namespace DataAccessLayer
                         Convert.ToDouble(ConfigurationManager.AppSettings["AuthTokenExpiry"]));
                         using (SqlConnection conn = new SqlConnection())
                         {
-                            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                            conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                             conn.Open();
                             SqlCommand cmd = new SqlCommand();
                             cmd.CommandText = "UpdateTokenData";
@@ -125,7 +125,7 @@ namespace DataAccessLayer
                     {
                         using (SqlConnection conn = new SqlConnection())
                         {
-                            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                            conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                             conn.Open();
                             SqlCommand cmd = new SqlCommand();
                             cmd.CommandText = "RemoveTokenDataByTokenId";
@@ -163,7 +163,7 @@ namespace DataAccessLayer
                     {
                         using (SqlConnection conn = new SqlConnection())
                         {
-                            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                            conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                             conn.Open();
                             SqlCommand cmd = new SqlCommand();
                             cmd.CommandText = "RemoveTokenDataByUserId";
@@ -193,7 +193,7 @@ namespace DataAccessLayer
             {
                 using (SqlConnection conn = new SqlConnection())
                 {
-                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandText = "GetTokenData";

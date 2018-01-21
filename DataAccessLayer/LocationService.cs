@@ -24,7 +24,7 @@ namespace DataAccessLayer
             {
                 using (SqlConnection conn = new SqlConnection())
                 {
-                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandText = "UpdateLocation";
@@ -58,7 +58,7 @@ namespace DataAccessLayer
             {
                 using (SqlConnection conn = new SqlConnection())
                 {
-                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandText = "GetLocations";
@@ -93,7 +93,7 @@ namespace DataAccessLayer
             {
                 using (SqlConnection conn = new SqlConnection())
                 {
-                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DEVConnection"].ConnectionString;
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["HostedConnection"].ConnectionString;
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandText = "GetLocations";

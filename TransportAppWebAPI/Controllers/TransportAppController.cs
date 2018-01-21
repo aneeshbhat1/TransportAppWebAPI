@@ -15,6 +15,11 @@ namespace TransportAppWebAPI.Controllers
     
     public class TransportAppController : ApiController
     {
+        public String Get()
+        {
+            return "Hi, I am up and running!";
+        }
+
         [HttpGet]
         [ActionName("GetUserDetails")]
         [AuthorizationRequired]
